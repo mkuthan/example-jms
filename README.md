@@ -1,4 +1,4 @@
-# JPA best practices, tips and tricks
+# JMS best practices, tips and tricks
 
 [![Build Status](https://travis-ci.org/mkuthan/example-jms.png)](https://travis-ci.org/mkuthan/example-jms) [![Coverage Status](https://coveralls.io/repos/mkuthan/example-jms/badge.png)](https://coveralls.io/r/mkuthan/example-jms)
 
