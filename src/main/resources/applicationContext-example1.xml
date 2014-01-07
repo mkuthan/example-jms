@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:property-placeholder location="classpath:/application.properties" />
+	<context:component-scan base-package="example.example1" />
+
+	<amq:queue id="example1Queue" physicalName="example1Queue" />
+	<amq:queue id="example1Dlq" physicalName="DLQ.example1Queue" />
+
+	<bean id="example1JmsTemplate" parent="abstractJmsTemplate">
+		<property name="defaultDestination" ref="example1Queue" />
+	</bean>
+
+	<bean id="example1DlqJmsTemplate" parent="abstractJmsTemplate">
+		<property name="defaultDestination" ref="example1Dlq" />
+	</bean>
+
+	<bean id="example1JmsListenerContainer" parent="abstractJmsListenerContainer">
+		<property name="destination" ref="example1Queue" />
+		<property name="messageListener">
+			<bean parent="abstractMessageListenerAdapter">
+				<property name="delegate" ref="example1Listener" />
+			</bean>
+		</property>
+	</bean>
+</beans>

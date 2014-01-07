@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:amq="http://activemq.apache.org/schema/core" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<amq:broker id="amqBroker" useJmx="true" useShutdownHook="false" persistent="false">
+		<amq:transportConnectors>
+			<amq:transportConnector uri="vm://localhost" />
+		</amq:transportConnectors>
+		<amq:destinationPolicy>
+			<amq:policyMap>
+				<amq:policyEntries>
+					<amq:policyEntry queue=">">
+						<amq:deadLetterStrategy>
+							<amq:individualDeadLetterStrategy queuePrefix="DLQ." useQueueForQueueMessages="true"
+								processNonPersistent="true" />
+						</amq:deadLetterStrategy>
+					</amq:policyEntry>
+					<amq:policyEntry topic=">">
+						<amq:deadLetterStrategy>
+							<amq:individualDeadLetterStrategy topicPrefix="DLQ." useQueueForTopicMessages="true"
+								processNonPersistent="true" />
+						</amq:deadLetterStrategy>
+					</amq:policyEntry>
+				</amq:policyEntries>
+			</amq:policyMap>
+		</amq:destinationPolicy>
+		<amq:systemUsage>
+			<amq:systemUsage>
+				<amq:memoryUsage>
+					<amq:memoryUsage limit="32mb" />
+				</amq:memoryUsage>
+			</amq:systemUsage>
+		</amq:systemUsage>
+	</amq:broker>
+
+	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" depends-on="amqBroker">
+		<property name="brokerURL" value="vm://localhost" />
+		<property name="alwaysSyncSend" value="false" />
+		<property name="prefetchPolicy">
+			<bean class="org.apache.activemq.ActiveMQPrefetchPolicy">
+				<property name="queuePrefetch" value="1" />
+			</bean>
+		</property>
+		<property name="redeliveryPolicy">
+			<bean class="org.apache.activemq.RedeliveryPolicy">
+				<property name="initialRedeliveryDelay" value="${example.jms.initialRedeliveryDelay}" />
+				<property name="backOffMultiplier" value="${example.jms.backOffMultiplier}" />
+				<property name="maximumRedeliveries" value="${example.jms.maximumRedeliveries}" />
+				<property name="useExponentialBackOff" value="true" />
+				<property name="tempQueue" value="true" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="jmsConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+		<constructor-arg ref="amqConnectionFactory" />
+		<property name="reconnectOnException" value="true" />
+	</bean>
+
+	<!-- <bean id="jmsConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory"> -->
+	<!-- <constructor-arg ref="amqConnectionFactory" /> -->
+	<!-- <property name="reconnectOnException" value="true" /> -->
+	<!-- <property name="sessionCacheSize" value="10" /> -->
+	<!-- </bean> -->
+
+	<bean id="abstractJmsTemplate" class="org.springframework.jms.core.JmsTemplate" abstract="true">
+		<constructor-arg ref="jmsConnectionFactory" />
+		<property name="sessionTransacted" value="true" />
+	</bean>
+
+	<bean id="abstractJmsListenerContainer" class="org.springframework.jms.listener.SimpleMessageListenerContainer"
+		abstract="true">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="sessionTransacted" value="true" />
+	</bean>
+
+	<bean id="abstractMessageListenerAdapter" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+	</bean>
+
+</beans>
