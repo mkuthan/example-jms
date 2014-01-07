@@ -1,8 +1,10 @@
-package example.example1;
+package example.infrastructure.jms.example1;
 
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import example.domain.example1.Example1Listener;
 
 @Configuration
 public class Example1Config {

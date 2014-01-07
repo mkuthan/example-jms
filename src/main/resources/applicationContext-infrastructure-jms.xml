@@ -46,9 +46,9 @@
 		</property>
 		<property name="redeliveryPolicy">
 			<bean class="org.apache.activemq.RedeliveryPolicy">
-				<property name="initialRedeliveryDelay" value="${example.jms.initialRedeliveryDelay}" />
-				<property name="backOffMultiplier" value="${example.jms.backOffMultiplier}" />
-				<property name="maximumRedeliveries" value="${example.jms.maximumRedeliveries}" />
+				<property name="initialRedeliveryDelay" value="${example.infrastructure.jms.domain.jms.initialRedeliveryDelay}" />
+				<property name="backOffMultiplier" value="${example.infrastructure.jms.domain.jms.backOffMultiplier}" />
+				<property name="maximumRedeliveries" value="${example.infrastructure.jms.domain.jms.maximumRedeliveries}" />
 				<property name="useExponentialBackOff" value="true" />
 				<property name="tempQueue" value="true" />
 			</bean>

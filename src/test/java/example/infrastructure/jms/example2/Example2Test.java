@@ -1,4 +1,4 @@
-package example.example2;
+package example.infrastructure.jms.example2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
@@ -18,6 +18,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Stopwatch;
+
+import example.domain.example2.Example2Listener;
+import example.domain.example2.Example2Message;
 
 @ContextConfiguration(locations = { "classpath:/testContext.xml" })
 public class Example2Test extends AbstractTestNGSpringContextTests {

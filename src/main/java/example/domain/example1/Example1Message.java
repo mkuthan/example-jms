@@ -1,17 +1,17 @@
-package example.example2;
+package example.domain.example1;
 
 import static java.util.Objects.requireNonNull;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Example2Message implements Serializable {
+public class Example1Message implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private String value;
 
-	public Example2Message(String value) {
+	public Example1Message(String value) {
 		this.value = requireNonNull(value);
 	}
 
@@ -29,7 +29,7 @@ public class Example2Message implements Serializable {
 			return false;
 		}
 
-		Example2Message other = (Example2Message) obj;
+		Example1Message other = (Example1Message) obj;
 		return Objects.equals(value, other.value);
 	}
 

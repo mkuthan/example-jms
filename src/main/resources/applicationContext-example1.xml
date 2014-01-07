@@ -6,7 +6,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<context:property-placeholder location="classpath:/application.properties" />
-	<context:component-scan base-package="example.example1" />
+	<context:component-scan base-package="example.infrastructure.jms.domain.example1" />
 
 	<amq:queue id="example1Queue" physicalName="example1Queue" />
 	<amq:queue id="example1Dlq" physicalName="DLQ.example1Queue" />
