@@ -9,6 +9,8 @@ import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.jms.Destination;
+
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,8 +39,11 @@ public class JmsExample1PublisherTest extends AbstractTestNGSpringContextTests {
 	private Example1Publisher publisher;
 
 	@Autowired
-	@Qualifier("example1DlqJmsTemplate")
-	private JmsTemplate dlqJmsTemplate;
+	private JmsTemplate jmsTemplate;
+
+	@Autowired
+	@Qualifier("example1Dlq")
+	private Destination dlq;
 
 	@Autowired
 	@Qualifier("example1Listener")
@@ -82,7 +87,7 @@ public class JmsExample1PublisherTest extends AbstractTestNGSpringContextTests {
 		// when
 		publisher.publish(ANY_MESSAGE);
 
-		Example1Message testMessage = (Example1Message) dlqJmsTemplate.receiveAndConvert();
+		Example1Message testMessage = (Example1Message) jmsTemplate.receiveAndConvert(dlq);
 		assertThat(testMessage).isEqualTo(ANY_MESSAGE);
 
 		assertThat(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS)).isGreaterThan(expectedTotalRedeliveryTime);

@@ -68,7 +68,7 @@
 	<!-- <property name="sessionCacheSize" value="10" /> -->
 	<!-- </bean> -->
 
-	<bean id="abstractJmsTemplate" class="org.springframework.jms.core.JmsTemplate" abstract="true">
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<constructor-arg ref="jmsConnectionFactory" />
 		<property name="sessionTransacted" value="true" />
 	</bean>

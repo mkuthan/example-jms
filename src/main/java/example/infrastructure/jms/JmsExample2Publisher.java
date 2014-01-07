@@ -1,23 +1,25 @@
 package example.infrastructure.jms;
 
+import javax.jms.Destination;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
+import ddd.infrastructure.jms.AbstractJmsPublisher;
 import example.domain.example2.Example2Message;
 import example.domain.example2.Example2Publisher;
 
 @Component
-public class JmsExample2Publisher implements Example2Publisher {
+public class JmsExample2Publisher extends AbstractJmsPublisher<Example2Message> implements Example2Publisher {
 
 	@Autowired
-	@Qualifier("example2JmsTemplate")
-	private JmsTemplate jmsTemplate;
+	@Qualifier("example2Topic")
+	private Destination destination;
 
 	@Override
-	public void publish(Example2Message message) {
-		jmsTemplate.convertAndSend(message);
+	protected Destination getDestination() {
+		return destination;
 	}
 
 }
