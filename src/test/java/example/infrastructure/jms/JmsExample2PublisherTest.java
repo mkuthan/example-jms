@@ -1,4 +1,4 @@
-package example.infrastructure.jms.example2;
+package example.infrastructure.jms;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
@@ -9,8 +9,11 @@ import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.TimeUnit;
 
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -21,17 +24,17 @@ import com.google.common.base.Stopwatch;
 
 import example.domain.example2.Example2Listener;
 import example.domain.example2.Example2Message;
+import example.domain.example2.Example2Publisher;
 
-@ContextConfiguration(locations = { "classpath:/testContext.xml" })
-public class Example2Test extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(classes = { JmsConfig.class })
+public class JmsExample2PublisherTest extends AbstractTestNGSpringContextTests {
 
 	private static final Example2Message ANY_MESSAGE = new Example2Message("any value");
 
 	private static final int RECEIVE_TIMEOUT = 5000;
 
 	@Autowired
-	@Qualifier("example2JmsTemplate")
-	private JmsTemplate jmsTemplate;
+	private Example2Publisher publisher;
 
 	@Autowired
 	@Qualifier("example2DlqJmsTemplate")
@@ -50,7 +53,7 @@ public class Example2Test extends AbstractTestNGSpringContextTests {
 	@Test
 	public void listenersShouldHandleMessage() {
 		// when
-		jmsTemplate.convertAndSend(ANY_MESSAGE);
+		publisher.publish(ANY_MESSAGE);
 
 		// then
 		verify(listener1, timeout(RECEIVE_TIMEOUT).times(1)).handleMessage(eq(ANY_MESSAGE));
@@ -68,7 +71,7 @@ public class Example2Test extends AbstractTestNGSpringContextTests {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		// when
-		jmsTemplate.convertAndSend(ANY_MESSAGE);
+		publisher.publish(ANY_MESSAGE);
 
 		// then
 		verify(listener1, timeout(RECEIVE_TIMEOUT).times(3)).handleMessage(eq(ANY_MESSAGE));
@@ -87,7 +90,7 @@ public class Example2Test extends AbstractTestNGSpringContextTests {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		// when
-		jmsTemplate.convertAndSend(ANY_MESSAGE);
+		publisher.publish(ANY_MESSAGE);
 
 		Example2Message testMessage1 = (Example2Message) dlqJmsTemplate.receiveAndConvert();
 		assertThat(testMessage1).isEqualTo(ANY_MESSAGE);
@@ -101,6 +104,20 @@ public class Example2Test extends AbstractTestNGSpringContextTests {
 	@BeforeMethod
 	void resetListener() {
 		reset(listener1, listener2);
+	}
+
+	@Configuration
+	public static class Config {
+
+		@Bean
+		public Example2Listener example2Listener1() {
+			return Mockito.mock(Example2Listener.class);
+		}
+
+		@Bean
+		public Example2Listener example2Listener2() {
+			return Mockito.mock(Example2Listener.class);
+		}
 	}
 
 }
