@@ -7,10 +7,13 @@
 
 	<context:property-placeholder location="classpath:/application.properties" />
 
-	<amq:broker id="amqBroker" useJmx="true" useShutdownHook="false" persistent="false">
+	<amq:broker id="amqBroker" useJmx="true" useShutdownHook="false" persistent="true">
 		<amq:transportConnectors>
 			<amq:transportConnector uri="vm://localhost" />
 		</amq:transportConnectors>
+		<amq:persistenceAdapter>
+			<amq:kahaDB directory="${jms.directory}" />
+		</amq:persistenceAdapter>
 		<amq:destinationPolicy>
 			<amq:policyMap>
 				<amq:policyEntries>
@@ -48,9 +51,9 @@
 		</property>
 		<property name="redeliveryPolicy">
 			<bean class="org.apache.activemq.RedeliveryPolicy">
-				<property name="initialRedeliveryDelay" value="${example.infrastructure.jms.domain.jms.initialRedeliveryDelay}" />
-				<property name="backOffMultiplier" value="${example.infrastructure.jms.domain.jms.backOffMultiplier}" />
-				<property name="maximumRedeliveries" value="${example.infrastructure.jms.domain.jms.maximumRedeliveries}" />
+				<property name="initialRedeliveryDelay" value="${jms.initialRedeliveryDelay}" />
+				<property name="backOffMultiplier" value="${jms.backOffMultiplier}" />
+				<property name="maximumRedeliveries" value="${jms.maximumRedeliveries}" />
 				<property name="useExponentialBackOff" value="true" />
 				<property name="tempQueue" value="true" />
 			</bean>

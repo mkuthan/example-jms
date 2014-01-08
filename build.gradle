@@ -40,6 +40,7 @@ dependencies {
 	testCompile "org.springframework:spring-test:$springVersion"
 		
 	compile "org.apache.activemq:activemq-broker:$activemqVersion"
+	compile "org.apache.activemq:activemq-kahadb-store:$activemqVersion"
 	compile "org.apache.activemq:activemq-spring:$activemqVersion"	
 		
 	compile 'org.apache.commons:commons-lang3:3.1'

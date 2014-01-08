@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -28,7 +27,7 @@ import example.domain.example2.Example2Listener;
 import example.domain.example2.Example2Message;
 import example.domain.example2.Example2Publisher;
 
-@ContextConfiguration(classes = { JmsConfig.class })
+@JmsPublisherTest
 public class JmsExample2PublisherTest extends AbstractTestNGSpringContextTests {
 
 	private static final Example2Message ANY_MESSAGE = new Example2Message("any value");

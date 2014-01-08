@@ -8,9 +8,9 @@ Examples
 Example 1
 ---------
 
-JMS queue with redelivery policy.
+Persistent JMS queue with redelivery policy.
 
 Example 2
 ---------
 
-JMS topic with redelivery policy.
+Persistent JMS topic with redelivery policy.
